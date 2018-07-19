@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liu.bean.mapper.UserMapper" >
+  <insert id="insertUser" parameterType="User">
+    insert into user(username,nickname,password, email,sex,role,motto,registerDate)
+    values(#{username},#{nickname},#{password},#{email},#{sex},#{role},#{motto},#{registerDate})
+  </insert>
+ <select id="selectUsers" resultType="User">
+    select * from user
+  </select>
+    <select id="searchregisterDateCount" parameterType="java.lang.String" resultType="User">
+        select  registerDate from user where date_format(registerDate,"%Y-%m-%d")=#{registerDate};
+    </select>
+  <update id="updateUser" parameterType="User">
+    update user set realname = #{realname}, role =#{role},
+    telephone =#{telephone}, sex=#{sex}, email=#{email},
+    motto = #{motto} where username = #{username}
+  </update>
+    <update id="alterpwd" parameterType="User">
+        update user set password = #{password} where username = #{username}
+    </update>
+
+    <select id="selectByrole" parameterType="java.lang.String" resultType="User">
+        select * from user where role = #{role};
+    </select>
+    <update id="updateSilenceFlag" parameterType="int">
+        update user set silenceFlag = "on" where userid = #{userid};
+    </update>
+    <delete id="deleteUser" parameterType="int">
+        delete from user where userid = #{userid};
+    </delete>
+
+    <delete id="batchDeleteUsers" parameterType="java.util.List">
+        delete from user where userid in
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <update id="batchSilenceUsers" parameterType="java.util.List">
+        update user set silenceFlag = "on" where userid in
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="RemoveSilenceUser" parameterType="int">
+        update user set silenceFlag = "off" where userid =#{userid}
+    </update>
+
+    <select id="searchUsersByregisterDate" parameterType="java.lang.String" resultType="User">
+        select * from user where registerDate like "%"#{registerDate}"%" and role="普通用户";
+    </select>
+
+    <select id="searchUsersBySex" parameterType="java.lang.String" resultType="User">
+        select * from user where sex = #{sex} and role="普通用户";
+    </select>
+
+    <update id="updateloginFlag" parameterType="User">
+        update user set loginFlag = #{loginFlag} where userid = #{userid};
+    </update>
+    <select id="selectByid" parameterType="int" resultType="User">
+        select * from user where userid = #{userid};
+    </select>
+
+    <select id="selectnicknameByids" parameterType="java.util.List" resultType="java.util.List">
+        select nickname from user where userid in
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+</mapper>

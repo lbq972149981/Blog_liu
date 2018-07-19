@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liu.bean.mapper.ChickSoupMapper" >
+    <select id="chickSoupLists" resultType="ChickSoup">
+        select * from chicksoup;
+    </select>
+    <insert id="addChickSoup" parameterType="ChickSoup">
+        insert into chicksoup(ctitle, cContent, cIssuer, cTime, cshowFlag)
+        values(#{ctitle},#{cContent},#{cIssuer},#{cTime},#{cshowFlag});
+    </insert>
+    <delete id="deleteChickSoup" parameterType="int">
+        delete from chicksoup where cid = #{cid};
+    </delete>
+    <select id="selectByid" parameterType="int" resultType="ChickSoup">
+        select * from chicksoup where cid = #{cid};
+    </select>
+    <update id="editChickSoup" parameterType="ChickSoup">
+        update chicksoup set ctitle = #{ctitle},cContent=#{cContent},cIssuer=#{cIssuer},
+        cTime=#{cTime},cshowFlag=#{cshowFlag} where cid = #{cid};
+    </update>
+    <delete id="batchDeleteChickSoups" parameterType="java.util.List">
+        delete from chicksoup where cid in
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="searchChickSoupsBytitle" parameterType="java.lang.String" resultType="ChickSoup">
+        select * from chicksoup where ctitle like "%"#{ctitle}"%";
+    </select>
+    <select id="searchChickSoupsBytime" parameterType="java.lang.String" resultType="ChickSoup">
+        select * from chicksoup where cTime like "%"#{cTime}"%";
+    </select>
+
+    <update id="editshowFlag" parameterType="ChickSoup">
+        update chicksoup set cshowFlag = #{cshowFlag} where  cid = #{cid};
+    </update>
+
+    <select id="chickSoupListsSortbytime" resultType="ChickSoup">
+        select * from chicksoup order by cTime;
+    </select>
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liu.bean.mapper.ReplyMapper">
+    <insert id="addBlogUserReply" parameterType="Reply">
+        insert into reply(bid, userid, replyContent, replyTime, curruserid,commentid)
+        values(#{bid},#{userid},#{replyContent},#{replyTime},#{curruserid},#{commentid});
+    </insert>
+    <insert id="addBlogUserReplyment" parameterType="Reply">
+        insert into reply(bid, userid, replyContent, replyTime, curruserid,rreplyid,commentid)
+        values(#{bid},#{userid},#{replyContent},#{replyTime},#{curruserid},#{rreplyid},#{commentid});
+    </insert>
+    <select id="selectReplyByBlog" parameterType="int" resultType="Reply">
+        select * from reply where bid = #{bid};
+    </select>
+    <delete id="deleteblogReply" parameterType="int">
+        delete from reply where replyid = #{replyid}
+    </delete>
+
+    <resultMap id="BaseResultMap" type="Reply">
+        <id property="replyid" column="replyid"/>
+        <result property="bid" column="bid"/>
+        <result property="userid" column="userid" />
+        <result property="replyTime" column="replyTime"/>
+        <result property="replyContent" column="replyContent" />
+        <result property="curruserid" column="curruserid" />
+        <result property="commentid" column="commentid" />
+        <result property="rreplyid" column="rreplyid" />
+        <result property="praise" column="praise"/>
+    </resultMap>
+    <resultMap type="ReplymentExt" id="ReplymentExtMap" extends="BaseResultMap">
+        <association property="user" javaType="user" column="userid">
+            <id column="userid" property="userid"/>
+            <result column="username" property="username"/>
+            <result column="password" property="password" />
+            <result column="nickname" property="nickname"  />
+            <result column="sex" property="sex"  />
+            <result column="role" property="role"  />
+            <result column="telephone" property="telephone" />
+            <result column="email" property="email"  />
+            <result column="motto" property="motto"  />
+            <result column="registerDate" property="registerDate" />
+            <result column="silenceFlag" property="silenceFlag" />
+            <result column="loginFlag" property="loginFlag"  />
+        </association>
+        <association property="blog" javaType="blog" column="bid">
+            <id column="bid" property="bid"  />
+            <result column="btitle" property="btitle"  />
+            <result column="bshowFlag" property="bshowFlag"/>
+            <result column="brecommendFlag" property="brecommendFlag" />
+            <result column="bkeyword" property="bkeyword"  />
+            <result column="bIssuer" property="bIssuer"/>
+            <result column="bTime" property="bTime" />
+            <result column="bsummary" property="bsummary" />
+            <result column="bcontent" property="bcontent" />
+            <result column="readamount" property="readamount" />
+            <result column="praiseamount" property="praiseamount" />
+        </association>
+        <association property="comment" javaType="comment" column="commentid">
+            <id column="commentid" property="commentid"  />
+            <result column="bid" property="bid"  />
+            <result column="userid" property="userid"/>
+            <result column="commentContent" property="commentContent" />
+            <result column="commentTime" property="commentTime"  />
+            <result column="praise" property="praise"/>
+        </association>
+    </resultMap>
+    <select id="selectReplymentExt" resultMap="ReplymentExtMap">
+        select * from user,reply,blog,comment where blog.bid = reply.bid and reply.userid = user.userid and reply.commentid = comment.commentid;
+    </select>
+    <select id="selectReplys" resultType="Reply">
+        select * from reply;
+    </select>
+    <select id="selectByreplyid" resultType="Reply">
+        select * from reply where replyid = #{replyid};
+    </select>
+
+
+    <select id="selectReplymentExtBytime" resultMap="ReplymentExtMap" parameterType="java.lang.String">
+        select * from user,reply,blog,comment where blog.bid = reply.bid and reply.userid = user.userid and reply.commentid = comment.commentid
+        and replyTime like "%"#{replyTime}"%";
+    </select>
+
+    <select id="selectReplymentExtBykeyword" resultMap="ReplymentExtMap" parameterType="java.lang.String">
+        select * from user,reply,blog,comment where blog.bid = reply.bid and reply.userid = user.userid and reply.commentid = comment.commentid
+        and bkeyword = #{bkeyword};
+    </select>
+
+    <select id="selectReplymentExttitle" resultMap="ReplymentExtMap" parameterType="java.lang.String">
+        select * from user,reply,blog,comment where blog.bid = reply.bid and reply.userid = user.userid and reply.commentid = comment.commentid
+        and btitle like "%"#{btitle}"%";
+    </select>
+</mapper>

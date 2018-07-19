@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liu.bean.mapper.EncouragementMapper">
+    <select id="selectAllens" resultType="Encouragement">
+        select * from encouragement;
+    </select>
+    <insert id="addEncouragement" parameterType="Encouragement">
+        insert into encouragement(enTitle, enContent, enTime, showFlag, enIssuer, collectFlag, recommendFlag)
+        values(#{enTitle},#{enContent},#{enTime},#{showFlag},#{enIssuer},#{collectFlag},#{recommendFlag});
+    </insert>
+    <update id="editCollectFlag" parameterType="Encouragement">
+        update encouragement set collectFlag = #{collectFlag} where id = #{id}
+    </update>
+    <update id="editShowFlag" parameterType="Encouragement">
+        update encouragement set showFlag = #{showFlag} where id = #{id}
+    </update>
+    <delete id="deleteEncouragement" parameterType="int">
+        delete from encouragement where id =#{id}
+    </delete>
+    <select id="queryByid" parameterType="int" resultType="Encouragement">
+        select * from encouragement where id = #{id};
+    </select>
+    <update id="editEncouragement" parameterType="Encouragement">
+        update encouragement set enTitle=#{enTitle},enContent=#{enContent},enTime=#{enTime},
+        showFlag=#{showFlag},recommendFlag=#{recommendFlag},enIssuer=#{enIssuer} where id = #{id};
+    </update>
+
+    <delete id="batchDeleteEncouragements" parameterType="java.util.List">
+        delete from encouragement where id in
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="batchRecommendEncouragements" parameterType="java.util.List">
+        update encouragement set recommendFlag = "on" where id in
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="batchDeprecatedEncouragements" parameterType="java.util.List">
+        update encouragement set recommendFlag = "off" where id in
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="searchByTitle" parameterType="java.lang.String" resultType="Encouragement">
+        select * from encouragement where enTitle like "%"#{enTitle}"%";
+    </select>
+</mapper>

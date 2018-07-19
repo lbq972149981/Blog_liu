@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liu.bean.mapper.LogInforMapper">
+    <insert id="insertLogs" parameterType="LogInfor">
+        insert into loginfor(username, operateTime, operateIp)
+        values(#{username},#{operateTime},#{operateIp});
+    </insert>
+    <select id="selectLogs" resultType="LogInfor">
+        select * from loginfor;
+    </select>
+    <select id="selectByDate" parameterType="java.lang.String" resultType="LogInfor">
+        select * from loginfor where date(operateTime)=#{operateTime};
+    </select>
+    <delete id="batchDeleteLogs" parameterType="java.util.List">
+        delete from loginfor where id in
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteLog" parameterType="int">
+        delete from loginfor where id = #{id};
+    </delete>
+</mapper>
